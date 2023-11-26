@@ -18,8 +18,8 @@ public class Basics {
 //        System.out.println();
 //
 //
-//        JsonPath jsonPath = new JsonPath(response);
-//        String emailUser = jsonPath.getString("email");
+        JsonPath jsonPath = new JsonPath(response);
+        String emailUser = jsonPath.getString("email");
     }
 }
 
