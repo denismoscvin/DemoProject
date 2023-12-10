@@ -34,17 +34,19 @@ public class Basics {
                         "    \"key\": \"qaclick123\"\n" +
                         "}")
                 .when().put("/maps/api/place/update/json")
-                .then().statusCode(200).assertThat().log().all()
+                .then().assertThat().log().all().statusCode(200)
                 .body("msg", equalTo("Address successfully updated"));
 
         //Get Place
         String getPlaceResponse = given().log().all().queryParam("key", "qaclick123").queryParam("place_id", placeId)
-                .when().get("maps/api/place/update/json")
+                .when().get("maps/api/place/get/json")
                 .then().assertThat().log().all().statusCode(200).extract().response().asString();
 
         JsonPath jsonPath1 = new JsonPath(getPlaceResponse);
         String actualAddress = jsonPath1.getString("address");
         System.out.println(actualAddress);
+
+        //Cucumber, Junit, Testng
     }
 }
 
