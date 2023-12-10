@@ -1,28 +1,50 @@
+import files.payload;
 import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 public class Basics {
+
+    //Add place
     public static void main(String[] args) {
         RestAssured.baseURI = "https://rahulshettyacademy.com";
-        String response = given().log().all().header("Content-Type", "application/json")
+        String response = given().log().all().queryParam("key", "qaclick123")
+                .header("Content-Type", "application/json")
+                .body(payload.Addplace())
+                .when().post("/maps/api/place/add/json")
+                .then().assertThat().statusCode(200)
+                .body("scope", equalTo("APP"))
+                .header("Server", "Apache/2.4.52 (Ubuntu)")
+                .extract().response().asString();
+
+        System.out.println(response);
+        JsonPath jsonPath = new JsonPath(response);
+        String placeId = jsonPath.getString("place_id");
+        System.out.println(placeId);
+
+
+        //Update Place
+        String newAddress = "70 Soroca hpuse, USA";
+        given().log().all().queryParam("key", "qaclick123").header("Content-Type", "application/json")
                 .body("{\n" +
-                        "    \"location\": {\n" +
-                        "        \"lat\": -99.383494,\n" +
-                        "        \"lng\": 99.427362\n" +
-                        "    },\n" +
-                        "    \"accuracy\": 50,\n" +
-                        "    \"name\": \"Soroca house\",\n" +
-                        "    \"phone_number\": \"(+91) 983 893 3999\",\n" +
-                        "    \"address\": \"99, side layout, cohen 99\",\n" +
-                        "    \"types\": [\n" +
-                        "        \"shoe park\",\n" +
-                        "        \"shop\"\n" +
-                        "    ],\n" +
-                        "    \"website\": \"http://google.com\",\n" +
-                        "    \"language\": \"English-IN\"\n" +
-                        "}").when().post("/maps/api/place/add/json")
-                .then().assertThat()
+                        "    \"place_id\": \"" + placeId + "\",\n" +
+                        "    \"address\": \"" + newAddress + "\",\n" +
+                        "    \"key\": \"qaclick123\"\n" +
+                        "}")
+                .when().put("/maps/api/place/update/json")
+                .then().statusCode(200).assertThat().log().all()
+                .body("msg", equalTo("Address successfully updated"));
+
+        //Get Place
+        String getPlaceResponse = given().log().all().queryParam("key", "qaclick123").queryParam("place_id", placeId)
+                .when().get("maps/api/place/update/json")
+                .then().assertThat().log().all().statusCode(200).extract().response().asString();
+
+        JsonPath jsonPath1 = new JsonPath(getPlaceResponse);
+        String actualAddress = jsonPath1.getString("address");
+        System.out.println(actualAddress);
     }
 }
 
