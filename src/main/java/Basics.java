@@ -51,6 +51,3 @@ public class Basics {
         //Cucumber, Junit, Testng
     }
 }
-
-
-
