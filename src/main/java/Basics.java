@@ -2,15 +2,15 @@ import files.ReUsableMethods;
 import files.payload;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
-import org.testng.Assert;
+import org.junit.Assert;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 public class Basics {
-
-    //Add place
     public static void main(String[] args) {
+
+        //Add Place
         RestAssured.baseURI = "https://rahulshettyacademy.com";
         String response = given().log().all().queryParam("key", "qaclick123")
                 .header("Content-Type", "application/json")
@@ -51,5 +51,6 @@ public class Basics {
         //Cucumber, Junit, Testng
     }
 }
+
 
 
